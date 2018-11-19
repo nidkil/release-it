@@ -29,10 +29,10 @@ test('run (dry run)', async t => {
 test('run (verbose)', async t => {
   mockStdIo.start();
   config.options.verbose = true;
-  const actual = await run('!pwd');
+  const actual = await run('echo foo');
   const { stdout } = mockStdIo.end();
-  t.equal(stdout, `$ pwd\n${pwd}\n`);
-  t.equal(actual, pwd);
+  t.equal(stdout, `$ echo foo\nfoo\n`);
+  t.equal(actual, 'foo');
   config.options.verbose = false;
   t.end();
 });
@@ -54,7 +54,10 @@ test('runTemplateCommand', async t => {
 test('pushd + popd', async t => {
   const outputPush = await pushd(dir);
   const [to, from] = outputPush.split(',');
-  const diff = to.replace(from + '/', '');
+  const diff = to
+    .replace(from, '')
+    .replace(/^[\/|\\\\]/, '')
+    .replace(/\\/g, '/');
   t.equal(diff, dir);
   const popOutput = await popd();
   const trail = popOutput.split(',');
