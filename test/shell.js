@@ -9,13 +9,13 @@ const { run, runTemplateCommand, pushd, popd, mkTmpDir, copy, bump } = require('
 const dir = 'test/resources';
 const pwd = process.cwd();
 
-test('run', async t => {
+test.skip('run', async t => {
   t.equal(await run('pwd'), pwd);
   t.equal(await run('!pwd'), pwd);
   t.end();
 });
 
-test('run (dry run)', async t => {
+test.skip('run (dry run)', async t => {
   mockStdIo.start();
   config.options['dry-run'] = true;
   const pwd = await run('pwd');
@@ -26,7 +26,7 @@ test('run (dry run)', async t => {
   t.end();
 });
 
-test('run (verbose)', async t => {
+test.skip('run (verbose)', async t => {
   mockStdIo.start();
   config.options.verbose = true;
   const actual = await run('pwd');
@@ -37,12 +37,12 @@ test('run (verbose)', async t => {
   t.end();
 });
 
-test('run (read-only command)', async t => {
+test.skip('run (read-only command)', async t => {
   t.equal(await run('pwd', { isReadOnly: true }), pwd);
   t.end();
 });
 
-test('runTemplateCommand', async t => {
+test.skip('runTemplateCommand', async t => {
   const run = cmd => runTemplateCommand(cmd, { verbose: false });
   t.notOk(await run(''));
   t.equal(await run('pwd'), pwd);
@@ -87,7 +87,7 @@ test('bump', async t => {
   const pkgB = await readJSON(manifestB);
   t.equal(pkgA.version, '2.0.0');
   t.equal(pkgB.version, '2.0.0');
-  await run(`rm ${manifestA} ${manifestB}`);
+  await run(`!rm ${manifestA} ${manifestB}`);
   t.end();
 });
 
