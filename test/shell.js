@@ -2,6 +2,7 @@ const test = require('tape');
 const shell = require('shelljs');
 const mockStdIo = require('mock-stdio');
 const path = require('path');
+const { EOL } = require('os');
 const { readFile, readJSON } = require('./util/index');
 const { config } = require('../lib/config');
 const { run, runTemplateCommand, pushd, popd, mkTmpDir, copy, bump } = require('../lib/shell');
@@ -31,7 +32,7 @@ test('run (verbose)', async t => {
   config.options.verbose = true;
   const actual = await run('echo foo');
   const { stdout } = mockStdIo.end();
-  t.equal(stdout, `$ echo foo\nfoo\n`);
+  t.equal(stdout, `$ echo foo\nfoo${EOL}`);
   t.equal(actual, 'foo');
   config.options.verbose = false;
   t.end();
