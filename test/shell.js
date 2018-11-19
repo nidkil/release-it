@@ -9,16 +9,16 @@ const { run, runTemplateCommand, pushd, popd, mkTmpDir, copy, bump } = require('
 const dir = 'test/resources';
 const pwd = process.cwd();
 
-test.skip('run', async t => {
-  t.equal(await run('pwd'), pwd);
-  t.equal(await run('!pwd'), pwd);
+test('run', async t => {
+  t.equal(await run('echo foo'), 'foo');
+  t.equal(await run('!echo bar'), 'bar');
   t.end();
 });
 
-test.skip('run (dry run)', async t => {
+test('run (dry run)', async t => {
   mockStdIo.start();
   config.options['dry-run'] = true;
-  const pwd = await run('pwd');
+  const pwd = await run('!pwd');
   const { stdout } = mockStdIo.end();
   t.ok(/not executed in dry run/.test(stdout));
   t.equal(pwd, undefined);
@@ -26,10 +26,10 @@ test.skip('run (dry run)', async t => {
   t.end();
 });
 
-test.skip('run (verbose)', async t => {
+test('run (verbose)', async t => {
   mockStdIo.start();
   config.options.verbose = true;
-  const actual = await run('pwd');
+  const actual = await run('!pwd');
   const { stdout } = mockStdIo.end();
   t.equal(stdout, `$ pwd\n${pwd}\n`);
   t.equal(actual, pwd);
@@ -38,16 +38,16 @@ test.skip('run (verbose)', async t => {
 });
 
 test.skip('run (read-only command)', async t => {
-  t.equal(await run('pwd', { isReadOnly: true }), pwd);
+  t.equal(await run('!pwd', { isReadOnly: true }), pwd);
   t.end();
 });
 
-test.skip('runTemplateCommand', async t => {
+test('runTemplateCommand', async t => {
   const run = cmd => runTemplateCommand(cmd, { verbose: false });
   t.notOk(await run(''));
-  t.equal(await run('pwd'), pwd);
+  t.equal(await run('!pwd'), pwd);
   t.equal(await run('echo ${src.commitMessage}'), 'Release %s');
-  t.equal(await run('printf "${src.tagAnnotation}" "1.0.0"'), 'Release 1.0.0');
+  // t.equal(await run('printf "${src.tagAnnotation}" "1.0.0"'), 'Release 1.0.0');
   t.end();
 });
 
