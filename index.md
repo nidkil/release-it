@@ -72,7 +72,7 @@ npm install --save-dev release-it
 
 Add this as a `script` to `package.json`:
 
-```
+```json
 {
   "name": "my-package",
   "version": "1.0.0",
@@ -80,7 +80,7 @@ Add this as a `script` to `package.json`:
     "release": "release-it"
   },
   "devDependencies": {
-    "release-it": "^8.1.0"
+    "release-it": "*"
   }
 }
 ```
@@ -114,7 +114,7 @@ release-it --dry-run
 
 Out of the box, release-it has sane defaults, and [plenty of options](conf/release-it.json) to configure it. Put the options to override in `.release-it.json` in the project root. Example:
 
-```
+```json
 {
   "src": {
     "tagName": "v${version}"
@@ -125,10 +125,24 @@ Out of the box, release-it has sane defaults, and [plenty of options](conf/relea
 }
 ```
 
+Or in a `release-it` property in `package.json`:
+
+```json
+{
+  "name": "my-package",
+  "devDependencies": {
+    "release-it": "*"
+  },
+  "release-it": {
+    "requireCleanWorkingDir": false
+  }
+}
+```
+
 Notes:
 
-- Only the settings to override need to be in `.release-it.json`. Everything else will fall back to the [default configuration](conf/release-it.json).
-- You can use `--config` if you want to use another path.
+- Only the settings to override need to be in `.release-it.json` (or `package.json`). Everything else will fall back to the [default configuration](conf/release-it.json).
+- You can use `--config` if you want to use another path for `.release-it.json`.
 
 Any option can also be set on the command-line, and will have highest priority. Example:
 
@@ -249,15 +263,21 @@ minified scripts, documentation), provide one or more glob patterns for the `git
 
 ## Publishing to npm
 
-No configuration is needed to publish the package to npm, as `npm.publish` is `true` by default. If a manual `npm publish` from the command line works, release-it should be able to do the same.
+No configuration is needed to publish the package to npm, as `npm.publish` is `true` by default. If a manual `npm publish` from the command line works, release-it should be able to do the same. The `"private": true` setting in package.json will be respected, and `release-it` will not publish the package to npm.
 
-The `"private": true` setting in package.json will be respected, and `release-it` will not publish the package to npm.
+### Public scoped packages
+
+Set `npm.access` to `"public"` to [publish scoped packages](https://docs.npmjs.com/misc/scope#publishing-scoped-packages), or make sure this is in `package.json`:
+
+```json
+"publishConfig": {
+  "access": "public"
+}
+```
 
 ### Two-factor authentication
 
-In case two-factor authentication (2FA) is enabled for the package, release-it will ask for the one-time password (OTP).
-
-Notes:
+In case two-factor authentication (2FA) is enabled for the package, release-it will ask for the one-time password (OTP). Notes:
 
 - The OTP can be provided from the command line (`--npm.otp=123456`). However, providing the OTP without a prompt basically defeats the purpose of 2FA (also, the OTP expires after short period).
 - Getting an `ENEEDAUTH` error while a manual `npm publish` works? Please see [#95](https://github.com/webpro/release-it/issues/95#issuecomment-344919384).
@@ -388,16 +408,16 @@ releaseIt(options).then(output => {
 ## Examples
 
 - [react-navigation/react-navigation](https://github.com/react-navigation/react-navigation)
+- [swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)
 - [StevenBlack/hosts](https://github.com/StevenBlack/hosts)
 - [react-native-community/react-native-tab-view](https://github.com/react-native-community/react-native-tab-view)
 - [callstack/linaria](https://github.com/callstack/linaria)
-- [swagger-api/swagger-js](https://github.com/swagger-api/swagger-js)
 - [vuejs/vuefire](https://github.com/vuejs/vuefire)
 - [posva/vue-promised](https://github.com/posva/vue-promised)
 - [blockchain/blockchain-wallet-v4-frontend](https://github.com/blockchain/blockchain-wallet-v4-frontend)
 - [infor-design/enterprise](https://github.com/infor-design/enterprise)
 - [tsqllint/tsqllint](https://github.com/tsqllint/tsqllint)
-- [adr/madr](https://github.com/adr/madr)
+- [segmentio/typewriter](https://github.com/segmentio/typewriter)
 - GitHub search for [projects with .release-it.json](https://github.com/search?o=desc&q=in%3Apath+.release-it.json&s=indexed&type=Code)
 
 ## Resources
